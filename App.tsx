@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { questions } from './data/questions';
 import QuestionCard from './components/QuestionCard';
@@ -42,11 +43,13 @@ const App: React.FC = () => {
     const question = questions.find(q => q.id === questionId);
     if (!question) return;
 
-    // For choice: compare IDs
-    // For blank: 'CORRECT' means user marked it correct
-    const isCorrect = question.type === 'choice' 
-      ? optionId === question.correctOptionId
-      : optionId === 'CORRECT';
+    let isCorrect = false;
+    if (question.type === 'choice' || question.type === 'judgement') {
+      isCorrect = optionId === question.correctOptionId;
+    } else {
+      // For blank
+      isCorrect = optionId === 'CORRECT';
+    }
     
     setState(prev => {
       const newWrongIds = isCorrect 
@@ -157,7 +160,7 @@ const App: React.FC = () => {
       if (filter === 'favorites' && !state.favorites.includes(q.id)) return false;
       if (filter === 'wrong' && !state.wrongIds.includes(q.id)) return false;
 
-      // 3. Type Filter (Choice/Blank)
+      // 3. Type Filter (Choice/Blank/Judgement)
       if (typeFilter !== 'all' && q.type !== typeFilter) return false;
 
       return true;
@@ -264,6 +267,7 @@ const App: React.FC = () => {
               <option value="all">所有题型</option>
               <option value="choice">选择题</option>
               <option value="blank">填空题</option>
+              <option value="judgement">判断题</option>
             </select>
           </div>
         </div>

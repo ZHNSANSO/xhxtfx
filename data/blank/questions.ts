@@ -146,12 +146,12 @@ export const blankQuestions: QuestionContent[] = [
   {
     id: 58,
     type: 'blank',
-    content: "$\\int_{-\\infty}^{t} \\delta(\\tau+1)\\cos\\omega_0\\tau d\\tau = $ _____",
+    content: "$\\int_{-\\infty}^{t} \\delta(\\tau+1) \\cos \\omega_0 \\tau d\\tau = $ _____",
   },
   {
     id: 59,
     type: 'blank',
-    content: "若 $f(t)$ 的傅里叶变换为 $F(w)$，则 $f(t)\\cos 200t$ 的傅里叶变换为_____， $tf(t)$ 的傅里叶变换为_____， $f(3t-3)$ 的傅里叶变换为_____， $f(2t-5)$ 的傅里叶变换为_____， $f(3-2t)$ 的傅里叶变换为_____。",
+    content: "若 $f(t)$ 的傅里叶变换为 $F(\\omega)$，则 $f(t)\\cos 200t$ 的傅里叶变换为_____， $tf(t)$ 的傅里叶变换为_____， $f(3t-3)$ 的傅里叶变换为_____， $f(2t-5)$ 的傅里叶变换为_____， $f(3-2t)$ 的傅里叶变换为_____。",
   },
   {
     id: 60,

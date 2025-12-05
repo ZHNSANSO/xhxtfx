@@ -4,6 +4,8 @@ import { choiceQuestions } from './choice/questions';
 import { choiceAnswers } from './choice/answers';
 import { blankQuestions } from './blank/questions';
 import { blankAnswers } from './blank/answers';
+import { judgementQuestions } from './judgement/questions';
+import { judgementAnswers } from './judgement/answers';
 
 // Merge Data
 export const questions: Question[] = [
@@ -14,5 +16,9 @@ export const questions: Question[] = [
   ...blankQuestions.map(q => ({
     ...q,
     ...blankAnswers[q.id]
+  })),
+  ...judgementQuestions.map(q => ({
+    ...q,
+    ...judgementAnswers[q.id]
   }))
 ];
