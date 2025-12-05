@@ -233,8 +233,8 @@ const App: React.FC = () => {
             className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary focus:outline-none disabled:opacity-50"
           />
           
-          {/* Main Filter Tabs */}
-          <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+          {/* Main Filter Tabs (Data Source) */}
+          <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-hide">
             {[
               { id: 'all', label: '全部题目' },
               { id: 'wrong', label: `错题集 (${state.wrongIds.length})` },
@@ -255,20 +255,28 @@ const App: React.FC = () => {
             ))}
           </div>
 
-          {/* Type Filter Dropdown/Select */}
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-slate-500 dark:text-slate-400">题型筛选:</span>
-            <select
-               value={typeFilter}
-               onChange={(e) => setTypeFilter(e.target.value as QuestionType | 'all')}
-               disabled={selectionMode}
-               className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-sm focus:ring-1 focus:ring-primary focus:outline-none"
-            >
-              <option value="all">所有题型</option>
-              <option value="choice">选择题</option>
-              <option value="blank">填空题</option>
-              <option value="judgement">判断题</option>
-            </select>
+          {/* Type Filter Tiled Chips (Distinct Style) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0 mr-1">题型</span>
+            {[
+              { id: 'all', label: '所有' },
+              { id: 'choice', label: '选择题' },
+              { id: 'blank', label: '填空题' },
+              { id: 'judgement', label: '判断题' },
+            ].map(type => (
+              <button
+                key={type.id}
+                onClick={() => setTypeFilter(type.id as QuestionType | 'all')}
+                disabled={selectionMode}
+                className={`px-3 py-1 rounded-md text-xs font-bold transition-all border ${
+                  typeFilter === type.id
+                    ? 'bg-slate-700 dark:bg-slate-200 text-white dark:text-slate-900 border-slate-700 dark:border-slate-200'
+                    : 'bg-transparent text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500'
+                }`}
+              >
+                {type.label}
+              </button>
+            ))}
           </div>
         </div>
 

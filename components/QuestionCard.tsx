@@ -351,7 +351,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 <span className="text-xl mr-2">💡</span> 解题思路与步骤
               </div>
               <div className="whitespace-pre-line leading-relaxed text-base">
-                <MathText text={question.explanation} block />
+                <MathText text={question.explanation} />
               </div>
             </div>
           )}

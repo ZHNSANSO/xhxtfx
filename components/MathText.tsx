@@ -1,56 +1,38 @@
+
 import React, { useEffect, useRef } from 'react';
 import katex from 'katex';
 
 interface MathTextProps {
   text: string;
   className?: string;
-  block?: boolean;
 }
 
-const MathText: React.FC<MathTextProps> = ({ text, className = "", block = false }) => {
+const MathText: React.FC<MathTextProps> = ({ text, className = "" }) => {
   const containerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Clear previous content
     containerRef.current.innerHTML = '';
 
-    // Split text by $ delimiter to separate Math and Text
-    // Format: "Text $math$ text"
-    const parts = text.split('$');
+    // Regex to split by \( ... \)
+    // Captures the delimiter and content: \\\( ... \\\)
+    // [\s\S]*? matches any character including newlines, non-greedily
+    const regex = /(\\\([\s\S]*?\\\))/g;
     
-    parts.forEach((part, index) => {
-      // Even index = regular text (which might contain **bold**)
-      // Odd index = LaTeX math
-      if (index % 2 === 0) {
-        if (part) {
-          // Parse Markdown bold syntax: **bold**
-          const subParts = part.split('**');
-          subParts.forEach((subPart, subIndex) => {
-            // Even subIndex = normal text
-            // Odd subIndex = bold text
-            if (subIndex % 2 === 0) {
-              if (subPart) {
-                containerRef.current?.appendChild(document.createTextNode(subPart));
-              }
-            } else {
-              if (subPart) {
-                const boldSpan = document.createElement('span');
-                boldSpan.className = "font-bold text-blue-600 dark:text-blue-400"; // Emphasis color
-                boldSpan.innerText = subPart;
-                containerRef.current?.appendChild(boldSpan);
-              }
-            }
-          });
-        }
-      } else {
+    const parts = text.split(regex);
+    
+    parts.forEach((part) => {
+      if (part.startsWith('\\(') && part.endsWith('\\)')) {
+        // It's math: \( content \)
+        // Remove delimiters to get raw latex
+        const math = part.slice(2, -2);
         const span = document.createElement('span');
         try {
-          // Use renderToString to bypass strict mode checks
-          const html = katex.renderToString(part, { 
+          // Render as inline math (displayMode: false)
+          const html = katex.renderToString(math, { 
             throwOnError: false, 
-            displayMode: block,
+            displayMode: false, 
             output: 'html',
             strict: false
           });
@@ -60,9 +42,30 @@ const MathText: React.FC<MathTextProps> = ({ text, className = "", block = false
           span.innerText = part;
         }
         containerRef.current?.appendChild(span);
+      } else {
+        // Regular text, handle Markdown-style bold **text**
+        if (part) {
+          const subParts = part.split('**');
+          subParts.forEach((subPart, subIndex) => {
+            if (subIndex % 2 === 0) {
+              // Normal text
+              if (subPart) {
+                containerRef.current?.appendChild(document.createTextNode(subPart));
+              }
+            } else {
+              // Bold text
+              if (subPart) {
+                const boldSpan = document.createElement('span');
+                boldSpan.className = "font-bold text-blue-600 dark:text-blue-400";
+                boldSpan.innerText = subPart;
+                containerRef.current?.appendChild(boldSpan);
+              }
+            }
+          });
+        }
       }
     });
-  }, [text, block]);
+  }, [text]);
 
   return <span ref={containerRef} className={className} />;
 };
